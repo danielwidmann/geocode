@@ -1,3 +1,4 @@
+import argparse
 from flask import Flask
 from flask_restful import Api
 
@@ -25,4 +26,15 @@ def run_server(host, port, debug):
 
 
 if __name__ == '__main__':
-    run_server("127.0.0.1", 5000, False)
+    # add a simple command line interface to the server application
+    parser = argparse.ArgumentParser(description='Reliable Geocoding Proxy Server.')
+    parser.add_argument('--host', type=str, default="127.0.0.1",
+                        help='the host ip address to listen on')
+    parser.add_argument('--port', type=int, default=5000,
+                        help='the port to listen on')
+    parser.add_argument('--debug', type=bool, default=False,
+                        help='debug mode')
+
+    args = parser.parse_args()
+
+    run_server(args.host, args.port, args.debug)
