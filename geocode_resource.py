@@ -1,6 +1,8 @@
 from flask import request
 from flask_restful import Resource
 
+from geocode_exceptions import GeocodeNotFoundException
+
 
 class GeocodeResource(Resource):
     """
@@ -21,8 +23,12 @@ class GeocodeResource(Resource):
         # get the query string from the GET request parameters
         query = request.args["query"]
 
-        # resolve the query using the provider given in the constructor
-        result = self._geocode_provider.resolve(query)
+        try:
+            # resolve the query using the provider given in the constructor
+            result = self._geocode_provider.resolve(query)
+        except GeocodeNotFoundException:
+            # no result was found, send an empty response
+            return {}
 
         # format the result according to the API specification
         return {"lat": result.lat, "lng": result.lng}
