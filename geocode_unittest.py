@@ -22,6 +22,11 @@ class GeocodeUnittestHere(TestCase):
         with self.assertRaises(GeocodeException):
             result = self._provider.resolve("a")
 
+    def test_here_timeout(self):
+        self._provider = GeocodeProviderHere(CredentialStore(), api_url="https://1.2.3.4")
+
+        with self.assertRaises(GeocodeException):
+            result = self._provider.resolve("a")
 
 if __name__ == '__main__':
     unittest.main()

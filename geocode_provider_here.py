@@ -32,7 +32,7 @@ class GeocodeProviderHere:
 
         try:
             # do the actual request
-            response = requests.get(self._api_url, params = parameters)
+            response = requests.get(self._api_url, params = parameters, timeout=2)
 
             # parse the relevant data from the response
             response_json = response.json()
