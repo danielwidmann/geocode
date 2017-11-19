@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 
 from credential_store import CredentialStore
-from geocode_exceptions import GeocodeException
+from geocode_exceptions import GeocodeException, GeocodeNotFoundException
 from geocode_provider_google import GeocodeProviderGoogle
 from geocode_provider_here import GeocodeProviderHere
 
@@ -29,6 +29,10 @@ class GeocodeUnittestHere(TestCase):
         with self.assertRaises(GeocodeException):
             result = self._provider.resolve("a")
 
+    def test_not_found(self):
+        with self.assertRaises(GeocodeNotFoundException):
+            result = self._provider.resolve("sdfasfjfsafksjk")
+
 
 class GeocodeUnittestGoogle(TestCase):
     def setUp(self):
@@ -51,6 +55,10 @@ class GeocodeUnittestGoogle(TestCase):
 
         with self.assertRaises(GeocodeException):
             result = self._provider.resolve("a")
+
+    def test_not_found(self):
+        with self.assertRaises(GeocodeNotFoundException):
+            result = self._provider.resolve("sdfasfjfsafksjk")
 
 
 if __name__ == '__main__':

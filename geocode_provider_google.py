@@ -1,6 +1,6 @@
 import requests
 
-from geocode_exceptions import GeocodeException
+from geocode_exceptions import GeocodeException, GeocodeNotFoundException
 from geocode_result import GeocodeResult
 
 
@@ -35,8 +35,15 @@ class GeocodeProviderGoogle:
 
             # parse the relevant data from the response
             response_json = response.json()
+
+            if len(response_json["results"]) == 0:
+                # no result found
+                raise GeocodeNotFoundException()
+
             location = response_json["results"][0]["geometry"]["location"]
             result = GeocodeResult(location["lat"], location["lng"])
+        except GeocodeNotFoundException as e:
+            raise
         except Exception as e:
             # something went wrong during the request. Let the caller know
             raise GeocodeException("Error resolving with Google API", e)

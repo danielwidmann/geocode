@@ -1,6 +1,6 @@
 import requests
 
-from geocode_exceptions import GeocodeException
+from geocode_exceptions import GeocodeException, GeocodeNotFoundException
 from geocode_result import GeocodeResult
 
 
@@ -36,8 +36,15 @@ class GeocodeProviderHere:
 
             # parse the relevant data from the response
             response_json = response.json()
+
+            if len(response_json["Response"]["View"]) == 0:
+                # no result found
+                raise GeocodeNotFoundException()
+
             position = response_json["Response"]["View"][0]["Result"][0]["Location"]["DisplayPosition"]
             result = GeocodeResult(position["Latitude"], position["Longitude"])
+        except GeocodeNotFoundException as e:
+            raise
         except Exception as e:
             # something went wrong during the request. Let the caller know
             raise GeocodeException("Error resolving with Here API", e)
