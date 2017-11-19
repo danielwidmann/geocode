@@ -4,8 +4,7 @@ from geocode_exceptions import GeocodeNotFoundException, GeocodeException
 class GeocodeProviderReliable:
     """
     This is a geocode provider that uses two providers to obtain results more reliably.
-    If the primary provider reports an error, the backup provider will be used.    
-    If the primary provider didn't find a result, the backup provider will not be tried.
+    If the primary provider reports an error or didn't find a result, the backup provider will be used.    
     """
 
     def __init__(self, primary, backup):
@@ -28,9 +27,7 @@ class GeocodeProviderReliable:
             # first try the primary provider
             result = self._primary.resolve(query)
             return result
-        except GeocodeNotFoundException:
-            raise
-        except GeocodeException:
+        except (GeocodeException, GeocodeNotFoundException):
             # ignore and try backup
             pass
 
